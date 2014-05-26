@@ -17,7 +17,7 @@
 
 #define MAX_CHANNELS    6
 
-static const int CHUNK_SIZE = 4;
+static const int CHUNK_SIZE = 2;//*2
 
 int main (void)
 {   
