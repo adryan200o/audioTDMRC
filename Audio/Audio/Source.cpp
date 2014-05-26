@@ -85,16 +85,36 @@ int main (void)
 	int contor = 0;
 	/* While there are samples in the input file, read them and process them */
 	audio_fourier_t *transformedData = new audio_fourier_t[in_frames];
-	audio_fourier_t *transformedDataCrt = transformedData;
-	short *dataCrt = data;
 
-	while ((readcount = sf_readf_short (infile, dataCrt, CHUNK_SIZE)))
+ for (int i = 0; i < in_frames; i++)
+ {
+  transformedData[i][0] = 0;
+  transformedData[i][1] = 0;
+ }
+
+ while ((readcount = sf_readf_short (infile, data + contor * CHUNK_SIZE, CHUNK_SIZE)))
     {
-		contor++;
-		forwardFourier(dataCrt, readcount, transformedDataCrt);
-		transformedDataCrt += CHUNK_SIZE;
-		dataCrt += CHUNK_SIZE;
+  if (contor)
+  {
+   audio_fourier_t transformedChunkPair[CHUNK_SIZE * 2];
+
+   forwardFourier(data + (contor - 1) * CHUNK_SIZE, CHUNK_SIZE * 2, transformedChunkPair);
+
+   for (int i = 0; i < CHUNK_SIZE * 2; i++)
+   {
+    transformedData[(contor - 1) * CHUNK_SIZE + i][0] += transformedChunkPair[i][0];
+    transformedData[(contor - 1) * CHUNK_SIZE + i][1] += transformedChunkPair[i][1];
+   }
+  }
+  contor++;
     }
+
+ for (int i = 0; i < in_frames; i++)
+ {
+  transformedData[i][0] /= 2;
+  transformedData[i][1] /= 2;
+ }
+
 	short *realData, *oldRealData;
 	short *newData = new short[in_frames];
 

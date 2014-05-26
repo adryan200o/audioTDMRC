@@ -45,7 +45,7 @@ void grow(Window &w,int count , bool &g)
 	/*if ((w.end - w.begin) > 11025 * 0.1)
 		g = false;*/
 
-	if (w.begin < 0 && w.end > count-1)
+	if (w.begin < 0 || w.end > count-1)
 	{
 		g = false;
 	}
@@ -176,7 +176,7 @@ void compute_localization (short* data,int count, int channels , std::vector<Win
 			med++;
 
 			if ( !g )	/*	if ! grow	*/
-				break;
+				goto done;
 			
 			compute_sd_m( w_current ,sump , sumsq); 
 			//printf(" %f",exp (w_current.getSize()));
@@ -192,18 +192,20 @@ void compute_localization (short* data,int count, int channels , std::vector<Win
 		
 			{
 				
-				loc.push_back(w_current);//save current window
+				
 
 				w_size  += w_current.getSize();
 				if (w_current.getSize() > w_max) w_max = w_current.getSize();
 
 				w_prev = w_current;	
-				break;
+				goto done;
 			}
 						
 			w_prev = w_current;
 						
 		}
+
+done : loc.push_back(w_current);//save current window
 						
 	}
 
