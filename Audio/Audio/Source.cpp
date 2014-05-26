@@ -17,7 +17,7 @@
 
 #define MAX_CHANNELS    6
 
-static const int CHUNK_SIZE = 2;
+static const int CHUNK_SIZE = 4;
 
 int main (void)
 {   
@@ -93,7 +93,7 @@ int main (void)
 		contor++;
 		forwardFourier(dataCrt, readcount, transformedDataCrt);
 		transformedDataCrt += CHUNK_SIZE;
-		dataCrt += CHUNK_SIZE/2;
+		dataCrt += CHUNK_SIZE;
     }
 	short *realData, *oldRealData;
 	short *newData = new short[in_frames];

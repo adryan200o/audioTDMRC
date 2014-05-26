@@ -33,7 +33,7 @@ void compute_sump_sumsq(short *data ,int count , std::vector<double> &sump , std
 /*	Create window limits from seed	*/
 Window create_window_from_seed (int seed)
 {
-	return Window(seed , seed+1) ;
+	return Window(seed-1 , seed+1) ;
 }
 
 /*	Grow window size	*/
@@ -42,8 +42,8 @@ void grow(Window &w,int count , bool &g)
 	w.begin --;
 	w.end ++;
 
-	if ((w.end - w.begin) > 11025 * 0.1)
-		g = false;
+	/*if ((w.end - w.begin) > 11025 * 0.1)
+		g = false;*/
 
 	if (w.begin < 0 && w.end > count-1)
 	{
@@ -153,7 +153,7 @@ void compute_localization (short* data,int count, int channels , std::vector<Win
 	Window w_current = Window();
 	Window w_first = Window();
 
-	w_first = create_window_from_seed ( 0 );
+	w_first = create_window_from_seed ( 1 );
 	compute_sd_m( w_first , sump , sumsq );
 	w_prev = w_first ;
 	
@@ -163,7 +163,7 @@ void compute_localization (short* data,int count, int channels , std::vector<Win
 	//FILE * file;
 	// file = fopen ("myfile.txt","w");
 
-	for (int seed = 0 ; seed < count ; seed++)
+	for (int seed = 1 ; seed < count-1 ; seed++)
 	{
 		w_current = create_window_from_seed (seed);
 				
@@ -189,6 +189,7 @@ void compute_localization (short* data,int count, int channels , std::vector<Win
 			//if (w_current.getStDev()*w_current.getSize() < w_prev.getStDev()*w_prev.getSize())
 			if (	w_current.getStDev()*log10 (w_current.getSize()) <	w_prev.getStDev()*log10(w_prev.getSize())  ) 
 			//if (w_current.getStDev() <	w_prev.getStDev()) 
+		
 			{
 				
 				loc.push_back(w_current);//save current window
@@ -254,6 +255,7 @@ void denormalize(short *data, int count, short min){
 		data[i]  = (data[i] + min) ;
 	}
 }
+
 
 
 

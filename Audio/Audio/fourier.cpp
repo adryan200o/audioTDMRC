@@ -4,12 +4,6 @@
 #include <stdio.h>
 #include <memory.h>
 
-//se face transormata Fourier pe tot semnalul si se ia imaginar si real. se face conversia din cartezian in real.
-//ne intereseaza amplitudinea. se trece cu filtrul peste el cu fereastra.
-
-//putem considera imagine de 1pixel de 1024p.
-
-//aplicam Fourier pe data si cu rezultatul aplicam conversia cartezian- real
 
 void forwardFourier(short *data, int count, fftw_complex *transformedData)
 {
